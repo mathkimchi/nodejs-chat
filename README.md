@@ -26,3 +26,18 @@ To send messages, go to inspect and then console on the webpage, then run `const
 You should see `received: Hi guys` on the CLI where you ran `node server.js`.
 
 I am going to commit now so ppl can see this version.
+
+---
+
+I added some new features:
+
+- Sending json instead of the bare messages
+- Adding email which is equivalent to usernames
+- Server stores chatlog (as a local string variable, not as a file yet). Client can request and display chatlog
+
+I will commit this to save the changes.
+The client UI is pretty self explanatory.
+
+If you are running the server, you can't actually do anything; just watch what happens.
+
+I didn't intend for this, but having multiple clients at once actually works, the chats don't show up on the messages recieved section, but you can see it in the chatlog.

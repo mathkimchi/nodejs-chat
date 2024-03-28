@@ -8,7 +8,58 @@
 </head>
 
 <body>
-    <button>Press Me :(</button>
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+        // send message logic
+        function onsendclick() {
+            socket.send(JSON.stringify({ "sendtype": "message", "messagevalue": document.getElementById('messagetextarea').value })); // send the current msg
+
+            document.getElementById('messagetextarea').value = ""; // just clear the current msg
+        }
+
+        // recieve msg logic
+        socket.onmessage = function (data) {
+            console.log(data);
+            let data_json = JSON.parse(data.data);
+            console.log(data_json);
+
+            if (data_json["sendtype"] == "chatlog") {
+                document.getElementById('chatlogdisplay').innerHTML = JSON.stringify(data_json["chatlogvalue"]);
+            }
+            if (data_json["sendtype"] == "message") {
+                document.getElementById('messagesdisplay').innerHTML += "<br>";
+                document.getElementById('messagesdisplay').innerHTML += data_json["messagevalue"];
+            }
+        };
+
+        // set email logic
+        function onemailclick() {
+            socket.send(JSON.stringify({ "sendtype": "emailchange", "newemail": document.getElementById('email').value }));
+        }
+
+        function onrequestchatlog() {
+            socket.send(JSON.stringify({ "sendtype": "requestchatlog" }));
+        }
+    </script>
+
+    <p id="messagesdisplay">Messages Recieved:</p>
+
+    <textarea name="messagetextarea" id="messagetextarea" cols="30" rows="10"></textarea>
+    <button onclick="onsendclick()">Send</button>
+
+    <br>
+    <br>
+    <br>
+
+    <input type="email" name="email" id="email">
+    <button onclick="onemailclick()">Update Email</button>
+
+    <br>
+    <br>
+
+    <p id="chatlogdisplay"></p>
+    <button onclick="onrequestchatlog()">Request Chatlog</button>
 </body>
 
 </html>
