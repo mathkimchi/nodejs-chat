@@ -41,3 +41,9 @@ The client UI is pretty self explanatory.
 If you are running the server, you can't actually do anything; just watch what happens.
 
 I didn't intend for this, but having multiple clients at once actually works, the chats don't show up on the messages recieved section, but you can see it in the chatlog.
+
+## JQuery
+
+WebSockets didn't work, so I am going to use GET and POST requests.
+
+Tomaz' server side js code can be found <https://github.com/TmzChevres/PeddieCS/blob/4e95ebff29b946da01af7ceab73f6056def2c0f7/nodejs/app.js>.

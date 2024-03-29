@@ -2,50 +2,16 @@
 
 
 const express = require('express')
-const app = express()
-const server = require('http').createServer(app);
-const WebSocket = require('ws');
 const fs = require('fs');
 
-const wss = new WebSocket.Server({ server: server });
+const app = express()
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 
 const chatlog = [];
-
-wss.on('connection', function connection(ws) {
-    let useremail = "anon";
-    ws.on('error', console.error);
-
-    ws.on('message', function message(data) {
-        let data_json = JSON.parse(data);
-
-        console.log('received: %s', data);
-        console.log('received json: %s', data_json);
-
-        if (data_json["sendtype"] == "emailchange") {
-            useremail = data_json["newemail"]
-        }
-
-        if (data_json["sendtype"] == "message") {
-
-            chatlog.push({
-                "sender": useremail,
-                "messagevalue": data_json["messagevalue"]
-            });
-
-            console.log(chatlog);
-
-            ws.send(JSON.stringify({ "sendtype": "message", "messagevalue": "yooooo i just recvd ur msg!" }));
-        }
-
-        if (data_json["sendtype"] == "requestchatlog") {
-            ws.send(JSON.stringify({ "sendtype": "chatlog", "chatlogvalue": chatlog }));
-        }
-    });
-
-    ws.send(JSON.stringify({ "sendtype": "message", "messagevalue": "initial msg check!" }));
-
-    console.log("Connected");
-});
 
 app.get("/", (req, res) => {
     fs.readFile('client-user.html', (err, data) => {
@@ -53,6 +19,27 @@ app.get("/", (req, res) => {
         res.write(data);
         res.end();  // end the response
     });
-})
 
-server.listen(8080);
+    console.log("Sent html page");
+});
+
+app.get("/chatlog", (req, res) => {
+    res.json(chatlog);
+    res.end();  // end the response
+
+    console.log("Sent chatlog");
+});
+
+app.post("/sendMessage", (req, res) => {
+    console.log("Got Message");
+    console.log(req.body);
+
+    const message = req.body.message;
+    const email = req.body.email;
+
+    chatlog.push({ email: email, message: message });
+});
+
+app.listen(5623, () => {
+    console.log('Server running on port 5623');
+});
