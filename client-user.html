@@ -7,13 +7,12 @@
     <title>Nodejs Chat</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        const socket = new WebSocket('ws://localhost:5623');
         let email = "anon";
 
         // send message logic
         function onsendclick() {
             if (window.jQuery) {
-                $.post("/sendMessage", {
+                $.post("sendMessage", {
                     email: email,
                     message: document.getElementById('messagetextarea').value
                 }, (data) => { });
@@ -29,7 +28,7 @@
 
         function onrequestchatlog() {
             if (window.jQuery) {
-                $.get("/chatlog", {
+                $.get("chatlog", {
                 }, function (data) {
                     console.log("Requested chatlog");
                     console.log(data);
